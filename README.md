@@ -4,6 +4,21 @@ MediSync is a hospital-facing healthcare management platform integrated with **A
 
 ---
 
+## Demo Access
+
+> Login with any of the accounts below to explore the portal.
+
+| Role | Username | Password | Access |
+|------|----------|----------|--------|
+| **Head Doctor** | `dr.mehta` | `Demo@1234` | Full access — doctors, patients, consents, logs |
+| **Doctor** | `dr.sharma` | `Demo@1234` | View & update assigned patients |
+| **Doctor** | `dr.patel` | `Demo@1234` | View & update assigned patients |
+| **Staff** | `staff.anita` | `Demo@1234` | Patient registration & scheduling |
+
+**Pre-loaded patients:** Ravi Kumar · Sunita Rao · Mohammed Ikhlas · Preethi Nair · Sanjay Gupta
+
+---
+
 ## Architecture
 
 ```
@@ -28,7 +43,7 @@ MediSync is a hospital-facing healthcare management platform integrated with **A
                             │
                    ┌────────▼────────┐
                    │  ABDM Backend   │
-                   │  localhost:9008  │
+                   │  localhost:9009 │
                    └─────────────────┘
 
 All services register with Eureka (localhost:8761)
@@ -62,22 +77,20 @@ Each service has its own MySQL database
 | AccountService | dynamic | Doctor/staff auth, registration, email OTP |
 | PatientService | dynamic | Patient records, file uploads, PDF generation |
 | ConsentService | dynamic | ABDM consent management |
-| ABDM_Backend | 9008 | ABDM webhook handler, FHIR data exchange |
+| ABDM_Backend | 9009 | ABDM webhook handler, FHIR data exchange |
 | Frontend | 5173 | React dev server |
 
 ---
 
-## Prerequisites
+## Local Setup
+
+### Prerequisites
 
 - **Java 21** — [Download](https://adoptium.net/)
 - **Apache Maven 3.8+** — [Download](https://maven.apache.org/download.cgi)
 - **Node.js 18+ & npm** — [Download](https://nodejs.org/)
 - **MySQL 8.x** — [Download](https://dev.mysql.com/downloads/)
 - **RabbitMQ 3.x** — [Download](https://www.rabbitmq.com/download.html)
-
----
-
-## Local Setup
 
 ### 1. Clone the repository
 
@@ -86,9 +99,7 @@ git clone https://github.com/Shubhamzanzad/HAD.git
 cd HAD
 ```
 
-### 2. MySQL Setup
-
-Log in to MySQL and create a dedicated user:
+### 2. MySQL setup
 
 ```sql
 CREATE USER 'HAD'@'localhost' IDENTIFIED BY 'Medisync.123';
@@ -96,103 +107,109 @@ GRANT ALL PRIVILEGES ON *.* TO 'HAD'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-The databases (`Account`, `Patient`, `Consent`, `Abdm`) are created automatically on first run via `createDatabaseIfNotExist=true`.
+Databases (`Account`, `Patient`, `Consent`, `Abdm`) are created automatically on first run.
 
-### 3. RabbitMQ Setup
+### 3. RabbitMQ setup
 
-Install and start RabbitMQ, then create the virtual host:
-
-**macOS (Homebrew):**
 ```bash
-brew install rabbitmq
-brew services start rabbitmq
+# macOS
+brew install rabbitmq && brew services start rabbitmq
+
+# Linux
+sudo apt install rabbitmq-server && sudo systemctl start rabbitmq-server
 ```
 
-**Linux (apt):**
 ```bash
-sudo apt install rabbitmq-server
-sudo systemctl start rabbitmq-server
-```
-
-**Windows:** Download the installer from [rabbitmq.com](https://www.rabbitmq.com/download.html) and run it.
-
-After RabbitMQ is running, create the virtual host:
-```bash
-# macOS/Linux
 rabbitmqctl add_vhost had
 rabbitmqctl set_permissions -p had guest ".*" ".*" ".*"
-
-# Windows (from RabbitMQ install directory)
-rabbitmqctl.bat add_vhost had
-rabbitmqctl.bat set_permissions -p had guest ".*" ".*" ".*"
 ```
 
-Then update `PatientService`, `ConsentService`, and `ABDM_Backend` `application.properties` to point to `localhost`:
-
-```properties
-spring.rabbitmq.host=localhost
-spring.rabbitmq.port=5672
-spring.rabbitmq.username=guest
-spring.rabbitmq.password=guest
-spring.rabbitmq.virtual-host=had
-```
-
-### 4. Fix PDF directory (PatientService)
-
-Open `Backend/PatientService/src/main/resources/application.properties` and update `pdf.directory` to a path that exists on your machine:
-
-**macOS/Linux:**
-```properties
-pdf.directory=/tmp/medisync/pdfs/
-```
-
-**Windows:**
-```properties
-pdf.directory=C:/medisync/pdfs/
-```
-
-Create the directory manually:
-```bash
-# macOS/Linux
-mkdir -p /tmp/medisync/pdfs
-
-# Windows (PowerShell)
-New-Item -ItemType Directory -Force -Path C:\medisync\pdfs
-```
-
-### 5. Start Backend Services
-
-Each service has its own `pom.xml`. Run them in separate terminals **in this order**:
+### 4. PDF directory
 
 ```bash
-# Terminal 1 — Eureka Discovery Server (must start first)
-cd Backend/DiscoveryServer
-mvn spring-boot:run
+mkdir -p /tmp/medisync/pdfs   # macOS / Linux
+```
 
-# Terminal 2 — API Gateway (after Eureka is up)
-cd Backend/API-Gateway
-mvn spring-boot:run
+### 5. Set environment variables
+
+All sensitive config is read from environment variables. Export these before starting any service:
+
+```bash
+# Database (each service uses its own DB name in DB_URL)
+export DB_USERNAME="HAD"
+export DB_PASSWORD="Medisync.123"
+
+# RabbitMQ
+export RABBITMQ_HOST="localhost"
+export RABBITMQ_PORT="5672"
+export RABBITMQ_USERNAME="guest"
+export RABBITMQ_PASSWORD="guest"
+export RABBITMQ_VHOST="had"
+
+# Gmail SMTP (for OTP emails — AccountService only)
+export GMAIL_USER="your-gmail@gmail.com"
+export GMAIL_APP_PASSWORD="xxxx xxxx xxxx xxxx"
+
+# Hospital identity
+export HOSPITAL_NAME="Fledlucifers Eye care Hospital"
+export HOSPITAL_ID="IN2210000259"
+
+# ABDM Backend URL (public URL of ABDM_Backend — use localhost for local dev)
+export ABDM_URL="http://localhost:9009"
+
+# AES encryption key for DB columns
+export DATABASE_ENCRYPTION_KEY="392d07a0b283c84cafb19e8efbacd43760c2dc4b2416320a084b0c56670f73f8"
+```
+
+> **Tip:** Put these in a `.env.local` file and run `source .env.local` before starting services.
+
+Each service also needs its own `DB_URL`. Set it per-terminal before running:
+
+```bash
+# AccountService terminal
+export DB_URL="jdbc:mysql://localhost:3306/Account?createDatabaseIfNotExist=true"
+
+# PatientService terminal
+export DB_URL="jdbc:mysql://localhost:3306/Patient?createDatabaseIfNotExist=true"
+
+# ConsentService terminal
+export DB_URL="jdbc:mysql://localhost:3306/Consent?createDatabaseIfNotExist=true"
+
+# ABDM_Backend terminal
+export DB_URL="jdbc:mysql://localhost:3306/Abdm?createDatabaseIfNotExist=true"
+```
+
+### 6. Start backend services
+
+Start each in a separate terminal **in this order** (Eureka must be up before others):
+
+```bash
+# Terminal 1 — Eureka Discovery Server
+cd Backend/DiscoveryServer && mvn spring-boot:run
+
+# Terminal 2 — API Gateway (wait for Eureka to be ready)
+cd Backend/API-Gateway && mvn spring-boot:run
 
 # Terminal 3 — Account Service
-cd Backend/AccountService
-mvn spring-boot:run
+export DB_URL="jdbc:mysql://localhost:3306/Account?createDatabaseIfNotExist=true"
+cd Backend/AccountService && mvn spring-boot:run
 
 # Terminal 4 — Patient Service
-cd Backend/PatientService
-mvn spring-boot:run
+export DB_URL="jdbc:mysql://localhost:3306/Patient?createDatabaseIfNotExist=true"
+cd Backend/PatientService && mvn spring-boot:run
 
 # Terminal 5 — Consent Service
-cd Backend/ConsentService
-mvn spring-boot:run
+export DB_URL="jdbc:mysql://localhost:3306/Consent?createDatabaseIfNotExist=true"
+cd Backend/ConsentService && mvn spring-boot:run
 
 # Terminal 6 — ABDM Backend
-cd ABDM_Backend
-mvn spring-boot:run
+export DB_URL="jdbc:mysql://localhost:3306/Abdm?createDatabaseIfNotExist=true"
+cd ABDM_Backend && mvn spring-boot:run
 ```
 
-Verify all services registered at: http://localhost:8761
+Verify all 6 services are registered at: **http://localhost:8761**
 
-### 6. Start Frontend
+### 7. Start frontend
 
 ```bash
 cd frontend
@@ -200,35 +217,23 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser.
+Open **http://localhost:5173** in your browser.
 
----
+### 8. Seed demo data
 
-## Environment Configuration
-
-All configuration lives in `application.properties` files inside each service's `src/main/resources/` directory. Key values to customize:
-
-| Property | File | Description |
-|----------|------|-------------|
-| `spring.datasource.username/password` | All services | MySQL credentials |
-| `spring.mail.username/password` | AccountService | Gmail SMTP for OTP emails |
-| `spring.rabbitmq.host` | PatientService, ConsentService, ABDM_Backend | RabbitMQ host |
-| `pdf.directory` | PatientService | Local path for generated PDFs |
-| `abdm.url` | AccountService, PatientService | ABDM backend public URL (ngrok in dev) |
-| `hospital.name` / `hospital.Id` | All services | Hospital details for ABDM registration |
-| `database.encryption.key` | All services | AES key for column-level DB encryption |
-
----
-
-## ABDM Integration Notes
-
-ABDM (Ayushman Bharat Digital Mission) requires your backend to be **publicly accessible** for webhooks. During local development, use [ngrok](https://ngrok.com/) to expose your ABDM_Backend:
+Once all services are running, populate the database with demo users and patients:
 
 ```bash
-ngrok http 9008
+bash seed.sh
 ```
 
-Copy the generated HTTPS URL and update `abdm.url` in all `application.properties` files.
+This creates all 4 demo accounts and 5 patients. You can then log in with the credentials in the [Demo Access](#demo-access) section above.
+
+For a deployed instance:
+
+```bash
+MEDISYNC_API_URL=https://your-api-gateway.onrender.com bash seed.sh
+```
 
 ---
 
@@ -236,6 +241,37 @@ Copy the generated HTTPS URL and update `abdm.url` in all `application.propertie
 
 | Role | Capabilities |
 |------|-------------|
-| `HEAD_DOCTOR` | Full access — manage doctors, patients, consents |
-| `DOCTOR` | View/update assigned patients, manage records |
+| `HEAD_DOCTOR` | Full access — manage doctors, patients, consents, view all logs |
+| `DOCTOR` | View & update assigned patients, manage records and prescriptions |
 | `STAFF` | Patient registration, appointment scheduling |
+
+---
+
+## Environment Configuration
+
+All sensitive values are passed via environment variables — nothing is hardcoded in source.
+
+| Variable | Used by | Description |
+|----------|---------|-------------|
+| `DB_URL` | All DB services | JDBC connection URL (differs per service) |
+| `DB_USERNAME` | All DB services | Database username |
+| `DB_PASSWORD` | All DB services | Database password |
+| `RABBITMQ_HOST/PORT/USERNAME/PASSWORD/VHOST` | Patient, Consent, ABDM | RabbitMQ connection |
+| `GMAIL_USER` / `GMAIL_APP_PASSWORD` | AccountService | Gmail SMTP for OTP emails |
+| `ABDM_URL` | Account, Patient, Consent | Public URL of ABDM_Backend |
+| `HOSPITAL_NAME` / `HOSPITAL_ID` | All services | Hospital identity for ABDM |
+| `DATABASE_ENCRYPTION_KEY` | Account, Patient, Consent | AES key for column-level encryption |
+
+---
+
+## ABDM Integration
+
+ABDM requires the ABDM_Backend to be **publicly accessible** so it can deliver webhook callbacks. When deployed (Render, GCP, etc.) the service's public URL is used directly — no tunnel needed.
+
+For local development only, expose the ABDM_Backend with ngrok:
+
+```bash
+ngrok http 9009
+```
+
+Then set `ABDM_URL` to the generated HTTPS URL.

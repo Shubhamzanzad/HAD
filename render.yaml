@@ -1,0 +1,99 @@
+services:
+
+  # ── 1. Discovery Server (Eureka) ─────────────────────────────────────────────
+  - type: web
+    name: medisync-discovery
+    plan: free
+    image:
+      url: docker.io/zanzadshubham25/medisync-discovery:latest
+    healthCheckPath: /actuator/health
+
+  # ── 2. API Gateway ────────────────────────────────────────────────────────────
+  - type: web
+    name: medisync-gateway
+    plan: free
+    image:
+      url: docker.io/zanzadshubham25/medisync-gateway:latest
+    healthCheckPath: /actuator/health
+
+  # ── 3. Account Service ────────────────────────────────────────────────────────
+  - type: web
+    name: medisync-account
+    plan: free
+    image:
+      url: docker.io/zanzadshubham25/medisync-account:latest
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SERVER_PORT
+        value: "8080"
+      - key: EUREKA_INSTANCE_HOSTNAME
+        value: medisync-account.onrender.com
+      - key: EUREKA_INSTANCE_NONSECUREPORTENABLED
+        value: "false"
+      - key: EUREKA_INSTANCE_SECUREPORTENABLED
+        value: "true"
+      - key: EUREKA_INSTANCE_SECUREPORT
+        value: "443"
+
+  # ── 4. Patient Service ────────────────────────────────────────────────────────
+  - type: web
+    name: medisync-patient
+    plan: free
+    image:
+      url: docker.io/zanzadshubham25/medisync-patient:latest
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SERVER_PORT
+        value: "8080"
+      - key: EUREKA_INSTANCE_HOSTNAME
+        value: medisync-patient.onrender.com
+      - key: EUREKA_INSTANCE_NONSECUREPORTENABLED
+        value: "false"
+      - key: EUREKA_INSTANCE_SECUREPORTENABLED
+        value: "true"
+      - key: EUREKA_INSTANCE_SECUREPORT
+        value: "443"
+
+  # ── 5. Consent Service ────────────────────────────────────────────────────────
+  - type: web
+    name: medisync-consent
+    plan: free
+    image:
+      url: docker.io/zanzadshubham25/medisync-consent:latest
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SERVER_PORT
+        value: "8080"
+      - key: EUREKA_INSTANCE_HOSTNAME
+        value: medisync-consent.onrender.com
+      - key: EUREKA_INSTANCE_NONSECUREPORTENABLED
+        value: "false"
+      - key: EUREKA_INSTANCE_SECUREPORTENABLED
+        value: "true"
+      - key: EUREKA_INSTANCE_SECUREPORT
+        value: "443"
+
+  # ── 6. ABDM Backend ───────────────────────────────────────────────────────────
+  - type: web
+    name: medisync-abdm
+    plan: free
+    image:
+      url: docker.io/zanzadshubham25/medisync-abdm:latest
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: EUREKA_INSTANCE_HOSTNAME
+        value: medisync-abdm.onrender.com
+      - key: EUREKA_INSTANCE_NONSECUREPORTENABLED
+        value: "false"
+      - key: EUREKA_INSTANCE_SECUREPORTENABLED
+        value: "true"
+      - key: EUREKA_INSTANCE_SECUREPORT
+        value: "443"
+
+  # ── 7. Frontend (nginx) ───────────────────────────────────────────────────────
+  - type: web
+    name: medisync-frontend
+    plan: free
+    image:
+      url: docker.io/zanzadshubham25/medisync-frontend:latest
+    healthCheckPath: /
