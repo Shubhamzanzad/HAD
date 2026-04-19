@@ -150,7 +150,13 @@ public class JwtService {
     }
 
     private ResponseCookie generateCookie(String name, String value, String path) {
-        return ResponseCookie.from(name, value).path(path).secure(false).sameSite("None").secure(true).maxAge(24 * 60 * 60).httpOnly(true).build();
+        return ResponseCookie.from(name, value)
+                .path(path)
+                .sameSite("Lax")
+                .secure(false)
+                .maxAge(24 * 60 * 60)
+                .httpOnly(true)
+                .build();
     }
 
     private Key getSignKey() {
