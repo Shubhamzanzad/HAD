@@ -23,15 +23,21 @@ log "Installing system packages..."
 sudo apt-get update -q
 sudo apt-get install -y build-essential git curl wget gnupg maven nginx nodejs npm
 
-# Install Java 21 via Eclipse Temurin (works on Ubuntu and Debian)
-log "Installing Java 21 via Eclipse Temurin..."
-. /etc/os-release
-wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public \
-    | sudo gpg --batch --no-tty --dearmour -o /etc/apt/trusted.gpg.d/adoptium.gpg
-echo "deb https://packages.adoptium.net/artifactory/deb ${VERSION_CODENAME} main" \
-    | sudo tee /etc/apt/sources.list.d/adoptium.list > /dev/null
-sudo apt-get update -q
-sudo apt-get install -y temurin-21-jdk
+# Install Java 21 via Eclipse Temurin (skip if already installed)
+if java -version 2>&1 | grep -q "21\."; then
+    warn "Java 21 already installed — skipping."
+else
+    log "Installing Java 21 via Eclipse Temurin..."
+    . /etc/os-release
+    # Remove stale key from previous runs before re-adding
+    sudo rm -f /etc/apt/trusted.gpg.d/adoptium.gpg
+    wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public \
+        | sudo gpg --batch --no-tty --dearmour -o /etc/apt/trusted.gpg.d/adoptium.gpg
+    echo "deb https://packages.adoptium.net/artifactory/deb ${VERSION_CODENAME} main" \
+        | sudo tee /etc/apt/sources.list.d/adoptium.list > /dev/null
+    sudo apt-get update -q
+    sudo apt-get install -y temurin-21-jdk
+fi
 
 # Detect JAVA_HOME dynamically — works for any JDK installation
 JAVA_HOME=$(dirname "$(dirname "$(readlink -f "$(which java)")")")
