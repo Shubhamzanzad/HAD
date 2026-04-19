@@ -23,17 +23,28 @@ err()     { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 # ── 1. System packages ────────────────────────────────────────────────────────
 log "Installing system packages..."
 sudo apt-get update -q
-sudo apt-get install -y \
-    build-essential git curl wget gnupg \
-    openjdk-21-jdk maven \
-    nginx \
-    nodejs npm
+sudo apt-get install -y build-essential git curl wget gnupg maven nginx nodejs npm
 
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+# Install Java 21 — method depends on OS (Ubuntu vs Debian)
+. /etc/os-release
+if [ "$ID" = "ubuntu" ]; then
+    log "Ubuntu detected — installing openjdk-21-jdk from main repo..."
+    sudo apt-get install -y openjdk-21-jdk
+else
+    log "Debian detected — installing openjdk-21-jdk from backports..."
+    echo "deb http://deb.debian.org/debian ${VERSION_CODENAME}-backports main" \
+        | sudo tee /etc/apt/sources.list.d/backports.list
+    sudo apt-get update -q
+    sudo apt-get install -y -t "${VERSION_CODENAME}-backports" openjdk-21-jdk
+fi
+
+# Detect JAVA_HOME dynamically (works on both Ubuntu and Debian)
+JAVA_HOME=$(dirname "$(dirname "$(readlink -f "$(which java)")")")
+export JAVA_HOME
 export PATH="$JAVA_HOME/bin:$PATH"
 java -version
 mvn -version
-success "System packages installed."
+success "System packages installed. JAVA_HOME=$JAVA_HOME"
 
 # ── 2. PDF output directory ───────────────────────────────────────────────────
 log "Creating PDF output directory..."
@@ -91,8 +102,7 @@ warn "ACTION REQUIRED: fill in GMAIL_USER, GMAIL_APP_PASSWORD, HOSPITAL_NAME in 
 
 # ── 7. Build all services ─────────────────────────────────────────────────────
 log "Building all 6 Java services (this takes ~10 minutes on first run)..."
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-export PATH="$JAVA_HOME/bin:$PATH"
+# JAVA_HOME already exported from step 1
 
 # AccountService must be installed first (PatientService depends on it)
 log "  Building AccountService (1/6)..."
@@ -148,9 +158,9 @@ Type=simple
 User=ubuntu
 WorkingDirectory=$(dirname "$jar_path")
 EnvironmentFile=/opt/had/config/env.conf
-Environment="JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64"
+Environment="JAVA_HOME=${JAVA_HOME}"
 ${db_url_line}
-ExecStart=/usr/lib/jvm/java-21-openjdk-amd64/bin/java -jar $jar_path
+ExecStart=${JAVA_HOME}/bin/java -jar $jar_path
 Restart=on-failure
 RestartSec=10
 
