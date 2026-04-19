@@ -53,6 +53,7 @@ logs/
 appLog.*
 appLog.log.*
 env.conf
+deploy-secrets.sh
 *.env
 .env.*
 !.env.example
