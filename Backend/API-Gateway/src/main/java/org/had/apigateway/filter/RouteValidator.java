@@ -15,7 +15,8 @@ public class RouteValidator {
             "/patient/getLgdStatesList",
             "/data/push",
             "/eureka",
-            "/abdm/**"
+            "/abdm/**",
+            "/actuator"
     );
 
     public Predicate<ServerHttpRequest> isSecured =

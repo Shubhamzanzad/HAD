@@ -7,9 +7,9 @@ services:
     plan: free
     dockerfilePath: ./Backend/DiscoveryServer/Dockerfile
     dockerContext: ./Backend/DiscoveryServer
-    healthCheckPath: /actuator/health
 
   # ── 2. API Gateway ────────────────────────────────────────────────────────────
+  # healthCheckPath uses /actuator/health — now whitelisted in RouteValidator
   - type: web
     name: medisync-gateway
     env: docker
@@ -25,7 +25,6 @@ services:
     plan: free
     dockerfilePath: ./Backend/AccountService/Dockerfile
     dockerContext: ./Backend/AccountService
-    healthCheckPath: /actuator/health
     envVars:
       - key: SERVER_PORT
         value: "8080"
@@ -45,7 +44,6 @@ services:
     plan: free
     dockerfilePath: ./Backend/PatientService/Dockerfile
     dockerContext: .
-    healthCheckPath: /actuator/health
     envVars:
       - key: SERVER_PORT
         value: "8080"
@@ -65,7 +63,6 @@ services:
     plan: free
     dockerfilePath: ./Backend/ConsentService/Dockerfile
     dockerContext: .
-    healthCheckPath: /actuator/health
     envVars:
       - key: SERVER_PORT
         value: "8080"
@@ -85,7 +82,6 @@ services:
     plan: free
     dockerfilePath: ./ABDM_Backend/Dockerfile
     dockerContext: ./ABDM_Backend
-    healthCheckPath: /actuator/health
     envVars:
       - key: EUREKA_INSTANCE_HOSTNAME
         value: medisync-abdm.onrender.com
