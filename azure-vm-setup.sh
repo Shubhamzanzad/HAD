@@ -23,10 +23,7 @@ err()     { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 # ── 1. System packages ────────────────────────────────────────────────────────
 log "Installing system packages..."
 sudo apt-get update -q
-sudo apt-get install -y build-essential git curl wget gnupg maven nginx nodejs npm git add azure-vm-setup.sh                                                                                                                                                                  
-  git commit -m "Handle leftover install dir from failed previous run"                                                                                                                       
-  git push origin main                                                                                                                                                                       
-                         
+sudo apt-get install -y build-essential git curl wget gnupg maven nginx nodejs npm
 
 # Install Java 21 via Eclipse Temurin (Adoptium) — works on Ubuntu and Debian
 log "Installing Java 21 via Eclipse Temurin (Adoptium)..."
