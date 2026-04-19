@@ -9,7 +9,7 @@ export default function PatientRegistrationLogs() {
     const getAllRecordDeletionLogs = async () => {
       try {
         const response = await axiosPrivate.get(
-          `http://127.0.0.1:9005/patient/getAllPatientRegistrationDetailsLogs`
+          `/patient/getAllPatientRegistrationDetailsLogs`
         );
         // console.log(response.data);
         setPatientRegistrationLogs(response.data);

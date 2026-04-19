@@ -41,7 +41,7 @@ function LinkHPR({ isHead }) {
     requestBody.hprId += "@hpr.abdm";
     try {
       const resp = await axios.post(
-        "http://127.0.0.1:9005/auth/generateAadharOTPHPR",
+        "/auth/generateAadharOTPHPR",
         requestBody
       );
       // console.log(resp);
@@ -66,7 +66,7 @@ function LinkHPR({ isHead }) {
 
     try {
       const resp = await axios.post(
-        "http://127.0.0.1:9005/auth/get-doctor-details",
+        "/auth/get-doctor-details",
         RequestBody
       );
 

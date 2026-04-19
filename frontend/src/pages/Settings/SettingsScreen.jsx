@@ -23,7 +23,7 @@ const SettingsScreen = () => {
     const getUserDetails = async () => {
       try {
         const response = await axiosPrivate.post(
-          `http://127.0.0.1:9005/auth/get-${decoded?.role.toLocaleLowerCase()}-details-by-username`,
+          `/auth/get-${decoded?.role.toLocaleLowerCase()}-details-by-username`,
           requestBody
         );
         // console.log(response.data);

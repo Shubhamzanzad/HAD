@@ -16,7 +16,7 @@ function ImageUploader(appointment_id) {
     formData.append("folderName", `Appointment-${appointment_id}`);
 
     try {
-      const path = "http://localhost:9005/patient/appointment/uploadImage";
+      const path = "/patient/appointment/uploadImage";
       const resp = await axiosPrivate.post(path, formData, {
         headers: {
           "Content-Type": "multipart/form-data",

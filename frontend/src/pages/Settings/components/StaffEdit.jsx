@@ -26,7 +26,7 @@ const StaffEdit = (userDetails) => {
     const getStates = async () => {
       try {
         const response = await axiosPrivate.post(
-          "http://127.0.0.1:9005/patient/getLgdStatesList"
+          "/patient/getLgdStatesList"
         );
         setStates(response.data);
         // console.log(response.data);
@@ -54,7 +54,7 @@ const StaffEdit = (userDetails) => {
     // console.log(getValues());
     try {
       const response = await axiosPrivate.post(
-        `http://127.0.0.1:9005/auth/editDetails`,
+        `/auth/editDetails`,
         getValues()
       );
       toast.success(response.data);

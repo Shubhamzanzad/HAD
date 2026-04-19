@@ -19,7 +19,7 @@ const DoctorList = () => {
     const getDoctorDetails = async () => {
       try {
         const response = await axiosPrivate.get(
-          `http://127.0.0.1:9005/doctor/getAllDoctorList`
+          `/doctor/getAllDoctorList`
         );
         // console.log(response.data);
         setAllDoctorList(response.data);
@@ -36,7 +36,7 @@ const DoctorList = () => {
     if (data) {
       try {
         const response = await axiosPrivate.get(
-          `http://127.0.0.1:9005/doctor/getAllDoctorList`
+          `/doctor/getAllDoctorList`
         );
         // console.log(response.data);
         setAllDoctorList(response.data);

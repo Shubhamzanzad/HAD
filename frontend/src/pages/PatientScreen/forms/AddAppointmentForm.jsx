@@ -29,7 +29,7 @@ function AddAppointmentForm({patientId,sendDataToParent}) {
   useEffect(() => {
     const getAllDoctorList = async () => {
       const resp = await axiosPrivate.get(
-        "http://127.0.0.1:9005/doctor/getAllDoctorList"
+        "/doctor/getAllDoctorList"
       );
       // console.log(resp);
       setAllDoctorList(resp.data);
@@ -52,7 +52,7 @@ function AddAppointmentForm({patientId,sendDataToParent}) {
     let data = getValues();
     // console.log(data);
     try {
-      const response = await axiosPrivate.post("http://127.0.0.1:9005/patient/appointment/createAppointment", data);
+      const response = await axiosPrivate.post("/patient/appointment/createAppointment", data);
       // console.log("POST response:", response);
       setOpen(!open);
       toast.success(response.data);

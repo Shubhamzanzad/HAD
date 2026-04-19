@@ -24,7 +24,7 @@ function PracticeDetails() {
     const getStates = async () => {
       try {
         const response = await axios.post(
-          "http://127.0.0.1:9005/patient/getLgdStatesList"
+          "/patient/getLgdStatesList"
         );
         setStates(response.data);
         // console.log(response.data);
@@ -42,7 +42,7 @@ function PracticeDetails() {
 
     try {
       const resp = await axios.post(
-        "http://127.0.0.1:9005/auth/registerFacility",
+        "/auth/registerFacility",
         getValues()
       );
       console.log(resp);

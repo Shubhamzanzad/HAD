@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import dayjs from "dayjs";
 
-const BASE_URL = "http://127.0.0.1:9005";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:9005";
 
 const useFetchEventSource = () => {
     const refresh = useRefreshToken();

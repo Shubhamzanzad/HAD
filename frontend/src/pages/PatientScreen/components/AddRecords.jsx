@@ -24,7 +24,7 @@ function AddRecords({ patientId, appointment_id, sendDataToParent, status }) {
     // console.log("patient", patientId.patientId, "app", appointment_id);
     try {
       const fetchData = async () => {
-        const path = `http://127.0.0.1:9005/patient/appointment/getPatientVitals?id=${appointment_id}`;
+        const path = `/patient/appointment/getPatientVitals?id=${appointment_id}`;
         const resp = await axiosPrivate.get(path);
         // console.log(resp.data, "hello");
         setVitals(resp.data);
@@ -35,7 +35,7 @@ function AddRecords({ patientId, appointment_id, sendDataToParent, status }) {
     }
 
     const getOpData = async () => {
-      const path = `http://127.0.0.1:9005/patient/appointment/getOpData?id=${appointment_id}`;
+      const path = `/patient/appointment/getOpData?id=${appointment_id}`;
       try {
         const response = await axiosPrivate.get(path);
         const data = response.data;
@@ -52,7 +52,7 @@ function AddRecords({ patientId, appointment_id, sendDataToParent, status }) {
     if (status) getOpData();
 
     const getPrescription = async () => {
-      const path = `http://127.0.0.1:9005/patient/appointment/getPrescription`;
+      const path = `/patient/appointment/getPrescription`;
       const requestBody = {
         appointment_id: appointment_id,
       };
@@ -120,7 +120,7 @@ function AddRecords({ patientId, appointment_id, sendDataToParent, status }) {
   const linkCareContext = () => {
     try {
       const completeAppointment = async () => {
-        const path = `http://127.0.0.1:9005/patient/appointment/completeAppointment`;
+        const path = `/patient/appointment/completeAppointment`;
         const requestBody = {
           appointmentId: appointment_id,
           prescription: prescription,

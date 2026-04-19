@@ -32,9 +32,9 @@ function PastRecords({ patientId, sendDataToParent }) {
         let path;
         if (decoded?.role === "DOCTOR") {
           const name = decoded?.name;
-          path = `http://127.0.0.1:9005/patient/appointment/getAppointmentForDoctor?id=${patientId.patientId}&name=${name}`;
+          path = `/patient/appointment/getAppointmentForDoctor?id=${patientId.patientId}&name=${name}`;
         } else {
-          path = `http://127.0.0.1:9005/patient/appointment/getAppointmentDetails?id=${patientId.patientId}`;
+          path = `/patient/appointment/getAppointmentDetails?id=${patientId.patientId}`;
         }
         const resp = await axiosPrivate.get(path);
         // console.log(resp.data);
@@ -53,9 +53,9 @@ function PastRecords({ patientId, sendDataToParent }) {
         let path;
         if (decoded?.role === "DOCTOR") {
           const name = decoded?.name;
-          path = `http://127.0.0.1:9005/patient/appointment/getAppointmentForDoctor?id=${patientId.patientId}&name=${name}`;
+          path = `/patient/appointment/getAppointmentForDoctor?id=${patientId.patientId}&name=${name}`;
         } else {
-          path = `http://127.0.0.1:9005/patient/appointment/getAppointmentDetails?id=${patientId.patientId}`;
+          path = `/patient/appointment/getAppointmentDetails?id=${patientId.patientId}`;
         }
         const resp = await axiosPrivate.get(path);
         // console.log(resp.data);
@@ -74,7 +74,7 @@ function PastRecords({ patientId, sendDataToParent }) {
     };
     try {
       const resp = await axiosPrivate.post(
-        `http://127.0.0.1:9005/patient/deleteAppointment`,
+        `/patient/deleteAppointment`,
         requestBody
       );
       // console.log(resp.data);

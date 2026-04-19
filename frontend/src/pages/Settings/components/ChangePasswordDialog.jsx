@@ -31,7 +31,7 @@ export default function ChangePasswordDialog(id, role) {
       // console.log(getValues());
       try {
         const response = await axiosPrivate.post(
-          `http://127.0.0.1:9005/auth/changePassword`,
+          `/auth/changePassword`,
           getValues()
         );
         toast.success("Password Changed Successfully");

@@ -27,7 +27,7 @@ const AddDoctorForm = () => {
     // console.log(getValues())
     try {
       const resp = await axiosPrivate.post(
-        "http://127.0.0.1:9005/auth/sendEmail",
+        "/auth/sendEmail",
         getValues()
       );
       // console.log(resp);

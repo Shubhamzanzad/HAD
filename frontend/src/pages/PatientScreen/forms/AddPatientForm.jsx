@@ -80,7 +80,7 @@ function AddPatientForm({sendDataToAllPatientList}) {
     if (!openDialog) {
       try {
         const response = await axiosPrivate.post(
-          "http://127.0.0.1:9005/patient/getLgdStatesList"
+          "/patient/getLgdStatesList"
         );
         setStates(response.data);
       } catch (error) {
@@ -351,7 +351,7 @@ function AddPatientForm({sendDataToAllPatientList}) {
             onClick={async () => {
               try {
                 const resp = await axiosPrivate.post(
-                  "http://127.0.0.1:9005/patient/savePatient",
+                  "/patient/savePatient",
                   getValues()
                 );
                 // console.log(resp);

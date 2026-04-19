@@ -44,7 +44,7 @@ function AccountDetails({ isHeadDoc, data }) {
     try {
       // console.log(getValues())
       const resp = await axios.post(
-        "http://127.0.0.1:9005/auth/registerDoctor",
+        "/auth/registerDoctor",
         getValues()
       );
       console.log(resp);

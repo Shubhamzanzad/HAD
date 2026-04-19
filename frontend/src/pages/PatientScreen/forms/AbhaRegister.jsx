@@ -102,7 +102,7 @@ function AbhaRegister({ sendDataToParent }) {
         txnId: txn,
       };
       const resp = await axiosPrivate.post(
-        "http://127.0.0.1:9005/patient/createHealthId",
+        "/patient/createHealthId",
         body
       );
       const abhanumber = resp.data.healthIdNumber;
@@ -113,7 +113,7 @@ function AbhaRegister({ sendDataToParent }) {
           authToken: resp.data.token,
         };
         const profileDetails = await axiosPrivate.post(
-          "http://127.0.0.1:9005/patient/getProfileDetails",
+          "/patient/getProfileDetails",
           body
         );
         const month = profileDetails.data.monthOfBirth.padStart(2, "0");
@@ -132,7 +132,7 @@ function AbhaRegister({ sendDataToParent }) {
             transactionId: profileDetails.data.transactionId,
           };
           const abhaSuggestions = await axiosPrivate.post(
-            "http://127.0.0.1:9005/patient/healthIdSuggestions",
+            "/patient/healthIdSuggestions",
             body
           );
           setAbhaAddressList(abhaSuggestions.data);
@@ -394,7 +394,7 @@ function AbhaRegister({ sendDataToParent }) {
               };
               try {
                 const resp = await axiosPrivate.post(
-                  "http://127.0.0.1:9005/patient/createPHRAddress",
+                  "/patient/createPHRAddress",
                   data
                 );
                 // console.log(resp);

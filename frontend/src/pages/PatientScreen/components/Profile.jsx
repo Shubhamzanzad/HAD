@@ -14,7 +14,7 @@ function Profile({ patientId }) {
   useEffect(() => {
     const getPatientDetails = async () => {
       try {
-        const path = `http://127.0.0.1:9005/patient/getPatientDetails?id=${patientId}`;
+        const path = `/patient/getPatientDetails?id=${patientId}`;
         const resp = await axiosPrivate.get(path);
         setPatientDetails(resp.data);
         console.log(resp.data)

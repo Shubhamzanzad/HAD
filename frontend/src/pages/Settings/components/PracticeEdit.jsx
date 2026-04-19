@@ -21,7 +21,7 @@ const PracticeEdit = () => {
     const getStates = async () => {
       try {
         const response = await axiosPrivate.post(
-          "http://127.0.0.1:9005/patient/getLgdStatesList"
+          "/patient/getLgdStatesList"
         );
         setStates(response.data);
         // console.log(response.data);
@@ -46,7 +46,7 @@ const PracticeEdit = () => {
     // console.log(getValues());
     try {
       const response = await axiosPrivate.post(
-        `http://127.0.0.1:9005/auth/editDetails`,
+        `/auth/editDetails`,
         getValues()
       );
       // console.log(response.data);

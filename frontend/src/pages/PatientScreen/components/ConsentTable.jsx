@@ -45,7 +45,7 @@ function ConsentTable({ patientId }) {
 
   const getConsentData = async (consentId) => {
     try {
-      const path = `http://127.0.0.1:9005/consent/getConsentData?consentId=${consentId}`;
+      const path = `/consent/getConsentData?consentId=${consentId}`;
       const resp = await axiosPrivate.get(path);
       // console.log(resp);
       if (resp.status === 200) {
@@ -88,7 +88,7 @@ function ConsentTable({ patientId }) {
   useEffect(() => {
     const getPatientDetails = async () => {
       try {
-        const path = `http://127.0.0.1:9005/patient/getPatientDetails?id=${patientId.patientId}`;
+        const path = `/patient/getPatientDetails?id=${patientId.patientId}`;
         const resp = await axiosPrivate.get(path);
         // console.log(resp.data);
         setPatientDetails(resp.data);
@@ -100,7 +100,7 @@ function ConsentTable({ patientId }) {
 
     const getAllConsentsList = async () => {
       try {
-        const path = `http://127.0.0.1:9005/consent/getConsentList?doctor_reg_no=${doctorDecoded.registrationNumber}&patient_id=${patientId.patientId}`;
+        const path = `/consent/getConsentList?doctor_reg_no=${doctorDecoded.registrationNumber}&patient_id=${patientId.patientId}`;
         const resp = await axiosPrivate.get(path);
         setConsentList(resp.data);
       } catch (error) {
@@ -113,7 +113,7 @@ function ConsentTable({ patientId }) {
   const handleDataFromChild = async (data) => {
     if (data) {
       try {
-        const path = `http://127.0.0.1:9005/consent/getConsentList?doctor_reg_no=${doctorDecoded.registrationNumber}&patient_id=${patientId.patientId}`;
+        const path = `/consent/getConsentList?doctor_reg_no=${doctorDecoded.registrationNumber}&patient_id=${patientId.patientId}`;
         const resp = await axiosPrivate.get(path);
         setConsentList(resp.data);
       } catch (error) {

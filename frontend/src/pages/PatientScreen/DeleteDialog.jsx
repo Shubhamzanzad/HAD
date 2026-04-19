@@ -30,7 +30,7 @@ const DeleteDialog = (patient) => {
         name : decoded?.name
       };
       const response = await axiosPrivate.post(
-        `http://127.0.0.1:9005/patient/deletePatient`,
+        `/patient/deletePatient`,
         requestBody
       );
       // console.log(response.data);

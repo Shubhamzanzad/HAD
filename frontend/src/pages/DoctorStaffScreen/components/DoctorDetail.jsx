@@ -29,7 +29,7 @@ const DoctorDetail = (doctor) => {
     };
     try {
       const response = await axiosPrivate.post(
-        `http://127.0.0.1:9005/auth/deleteFaculty`,
+        `/auth/deleteFaculty`,
         requestBody
       );
       toast.success(response.data);

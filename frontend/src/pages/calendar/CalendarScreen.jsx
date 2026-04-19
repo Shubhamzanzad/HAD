@@ -24,7 +24,7 @@ const CalendarScreen = () => {
     const getAllAppointments = async () => {
       role;
       const resp = await axiosPrivate.get(
-        "http://127.0.0.1:9005/patient/appointment/getAllAppointments"
+        "/patient/appointment/getAllAppointments"
       );
       // console.log(resp.data);
       setAppointmentDetails(resp.data);
@@ -44,7 +44,7 @@ const CalendarScreen = () => {
 
     const getAllDoctorList = async () => {
       const resp = await axiosPrivate.get(
-        "http://127.0.0.1:9005/doctor/getAllDoctorList"
+        "/doctor/getAllDoctorList"
       );
       if(decoded?.role === "DOCTOR" || decoded?.role === "HEAD_DOCTOR"){
         const doctor = resp.data.find(doc => doc.registration_number == decoded.registrationNumber)

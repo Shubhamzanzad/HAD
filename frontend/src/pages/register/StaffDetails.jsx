@@ -31,7 +31,7 @@ export default function StaffDetails() {
   const onSubmit = async () => {
     try {
       const resp = await axios.post(
-        "http://127.0.0.1:9005/auth/registerStaff",
+        "/auth/registerStaff",
         getValues()
       );
       // console.log(resp);abhaNumber

@@ -18,7 +18,7 @@ const StaffList = () => {
     const getStaffDetails = async () => {
       try {
         const response = await axiosPrivate.get(
-          `http://127.0.0.1:9005/auth/getAllStaffList`
+          `/auth/getAllStaffList`
         );
         // console.log(response.data);
         setAllStaffList(response.data);
@@ -37,7 +37,7 @@ const StaffList = () => {
     if (data) {
       try {
         const response = await axiosPrivate.get(
-          `http://127.0.0.1:9005/auth/getAllStaffList`
+          `/auth/getAllStaffList`
         );
         // console.log(response.data);
         setAllStaffList(response.data);

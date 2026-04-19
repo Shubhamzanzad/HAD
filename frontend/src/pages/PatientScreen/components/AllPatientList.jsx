@@ -24,7 +24,7 @@ const AllPatientList = (props) => {
     }
     const getAllPatientList = async () => {
       const resp = await axiosPrivate.get(
-        "http://127.0.0.1:9005/patient/getPatientList"
+        "/patient/getPatientList"
       );
       // console.log(resp);
       setAllPatientList(resp.data);
@@ -38,7 +38,7 @@ const AllPatientList = (props) => {
     if (data) {
       try {
         const resp = await axiosPrivate.get(
-          "http://127.0.0.1:9005/patient/getPatientList"
+          "/patient/getPatientList"
         );
         setAllPatientList(resp.data);
       } catch (error) {

@@ -28,7 +28,7 @@ const StaffDetail = (staff) => {
     };
     try {
       const response = await axiosPrivate.post(
-        `http://127.0.0.1:9005/auth/deleteFaculty`,
+        `/auth/deleteFaculty`,
         requestBody
       );
       // console.log(response.data);

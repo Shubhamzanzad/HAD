@@ -22,7 +22,7 @@ export default function VerifyEmail() {
     const verifyToken = async () => {
       try {
         const resp = await axios.post(
-          "http://127.0.0.1:9005/auth/verifyEmail",
+          "/auth/verifyEmail",
           requestBody
         );
         // console.log(resp);
