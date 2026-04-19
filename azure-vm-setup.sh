@@ -25,20 +25,17 @@ log "Installing system packages..."
 sudo apt-get update -q
 sudo apt-get install -y build-essential git curl wget gnupg maven nginx nodejs npm
 
-# Install Java 21 — method depends on OS (Ubuntu vs Debian)
+# Install Java 21 via Eclipse Temurin (Adoptium) — works on Ubuntu and Debian
+log "Installing Java 21 via Eclipse Temurin (Adoptium)..."
 . /etc/os-release
-if [ "$ID" = "ubuntu" ]; then
-    log "Ubuntu detected — installing openjdk-21-jdk from main repo..."
-    sudo apt-get install -y openjdk-21-jdk
-else
-    log "Debian detected — installing openjdk-21-jdk from backports..."
-    echo "deb http://deb.debian.org/debian ${VERSION_CODENAME}-backports main" \
-        | sudo tee /etc/apt/sources.list.d/backports.list
-    sudo apt-get update -q
-    sudo apt-get install -y -t "${VERSION_CODENAME}-backports" openjdk-21-jdk
-fi
+wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public \
+    | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/adoptium.gpg
+echo "deb https://packages.adoptium.net/artifactory/deb ${VERSION_CODENAME} main" \
+    | sudo tee /etc/apt/sources.list.d/adoptium.list
+sudo apt-get update -q
+sudo apt-get install -y temurin-21-jdk
 
-# Detect JAVA_HOME dynamically (works on both Ubuntu and Debian)
+# Detect JAVA_HOME dynamically
 JAVA_HOME=$(dirname "$(dirname "$(readlink -f "$(which java)")")")
 export JAVA_HOME
 export PATH="$JAVA_HOME/bin:$PATH"
