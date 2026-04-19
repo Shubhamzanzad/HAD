@@ -3,6 +3,7 @@ services:
   # ── 1. Discovery Server (Eureka) ─────────────────────────────────────────────
   - type: web
     name: medisync-discovery
+    env: docker
     plan: free
     image:
       url: docker.io/zanzadshubham25/medisync-discovery:latest
@@ -11,6 +12,7 @@ services:
   # ── 2. API Gateway ────────────────────────────────────────────────────────────
   - type: web
     name: medisync-gateway
+    env: docker
     plan: free
     image:
       url: docker.io/zanzadshubham25/medisync-gateway:latest
@@ -19,6 +21,7 @@ services:
   # ── 3. Account Service ────────────────────────────────────────────────────────
   - type: web
     name: medisync-account
+    env: docker
     plan: free
     image:
       url: docker.io/zanzadshubham25/medisync-account:latest
@@ -38,6 +41,7 @@ services:
   # ── 4. Patient Service ────────────────────────────────────────────────────────
   - type: web
     name: medisync-patient
+    env: docker
     plan: free
     image:
       url: docker.io/zanzadshubham25/medisync-patient:latest
@@ -57,6 +61,7 @@ services:
   # ── 5. Consent Service ────────────────────────────────────────────────────────
   - type: web
     name: medisync-consent
+    env: docker
     plan: free
     image:
       url: docker.io/zanzadshubham25/medisync-consent:latest
@@ -76,6 +81,7 @@ services:
   # ── 6. ABDM Backend ───────────────────────────────────────────────────────────
   - type: web
     name: medisync-abdm
+    env: docker
     plan: free
     image:
       url: docker.io/zanzadshubham25/medisync-abdm:latest
@@ -93,6 +99,7 @@ services:
   # ── 7. Frontend (nginx) ───────────────────────────────────────────────────────
   - type: web
     name: medisync-frontend
+    env: docker
     plan: free
     image:
       url: docker.io/zanzadshubham25/medisync-frontend:latest
