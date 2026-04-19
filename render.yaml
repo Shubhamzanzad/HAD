@@ -5,8 +5,8 @@ services:
     name: medisync-discovery
     env: docker
     plan: free
-    image:
-      url: docker.io/zanzadshubham25/medisync-discovery:latest
+    dockerfilePath: ./Backend/DiscoveryServer/Dockerfile
+    dockerContext: ./Backend/DiscoveryServer
     healthCheckPath: /actuator/health
 
   # ── 2. API Gateway ────────────────────────────────────────────────────────────
@@ -14,8 +14,8 @@ services:
     name: medisync-gateway
     env: docker
     plan: free
-    image:
-      url: docker.io/zanzadshubham25/medisync-gateway:latest
+    dockerfilePath: ./Backend/API-Gateway/Dockerfile
+    dockerContext: ./Backend/API-Gateway
     healthCheckPath: /actuator/health
 
   # ── 3. Account Service ────────────────────────────────────────────────────────
@@ -23,8 +23,8 @@ services:
     name: medisync-account
     env: docker
     plan: free
-    image:
-      url: docker.io/zanzadshubham25/medisync-account:latest
+    dockerfilePath: ./Backend/AccountService/Dockerfile
+    dockerContext: ./Backend/AccountService
     healthCheckPath: /actuator/health
     envVars:
       - key: SERVER_PORT
@@ -38,13 +38,13 @@ services:
       - key: EUREKA_INSTANCE_SECUREPORT
         value: "443"
 
-  # ── 4. Patient Service ────────────────────────────────────────────────────────
+  # ── 4. Patient Service (root context — needs AccountService source) ───────────
   - type: web
     name: medisync-patient
     env: docker
     plan: free
-    image:
-      url: docker.io/zanzadshubham25/medisync-patient:latest
+    dockerfilePath: ./Backend/PatientService/Dockerfile
+    dockerContext: .
     healthCheckPath: /actuator/health
     envVars:
       - key: SERVER_PORT
@@ -58,13 +58,13 @@ services:
       - key: EUREKA_INSTANCE_SECUREPORT
         value: "443"
 
-  # ── 5. Consent Service ────────────────────────────────────────────────────────
+  # ── 5. Consent Service (root context — needs AccountService source) ───────────
   - type: web
     name: medisync-consent
     env: docker
     plan: free
-    image:
-      url: docker.io/zanzadshubham25/medisync-consent:latest
+    dockerfilePath: ./Backend/ConsentService/Dockerfile
+    dockerContext: .
     healthCheckPath: /actuator/health
     envVars:
       - key: SERVER_PORT
@@ -83,8 +83,8 @@ services:
     name: medisync-abdm
     env: docker
     plan: free
-    image:
-      url: docker.io/zanzadshubham25/medisync-abdm:latest
+    dockerfilePath: ./ABDM_Backend/Dockerfile
+    dockerContext: ./ABDM_Backend
     healthCheckPath: /actuator/health
     envVars:
       - key: EUREKA_INSTANCE_HOSTNAME
@@ -101,6 +101,6 @@ services:
     name: medisync-frontend
     env: docker
     plan: free
-    image:
-      url: docker.io/zanzadshubham25/medisync-frontend:latest
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
     healthCheckPath: /

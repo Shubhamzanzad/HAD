@@ -1,6 +1,15 @@
+# AccountService must be installed (not just packaged) so PatientService
+# and ConsentService can depend on it in their multi-stage builds.
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -q
+COPY src ./src
+RUN mvn clean install -DskipTests -q
+
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-COPY target/AccountService-0.0.1-SNAPSHOT-exec.jar app.jar
+COPY --from=builder /app/target/AccountService-0.0.1-SNAPSHOT-exec.jar app.jar
 
 ENV DB_URL=jdbc:mysql://gateway01.ap-northeast-1.prod.aws.tidbcloud.com:4000/Account?sslMode=VERIFY_IDENTITY&createDatabaseIfNotExist=true
 ENV DB_USERNAME=26dpKbcV8pYtkgB.root
