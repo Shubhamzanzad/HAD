@@ -23,7 +23,10 @@ err()     { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 # ── 1. System packages ────────────────────────────────────────────────────────
 log "Installing system packages..."
 sudo apt-get update -q
-sudo apt-get install -y build-essential git curl wget gnupg maven nginx nodejs npm
+sudo apt-get install -y build-essential git curl wget gnupg maven nginx nodejs npm git add azure-vm-setup.sh                                                                                                                                                                  
+  git commit -m "Handle leftover install dir from failed previous run"                                                                                                                       
+  git push origin main                                                                                                                                                                       
+                         
 
 # Install Java 21 via Eclipse Temurin (Adoptium) — works on Ubuntu and Debian
 log "Installing Java 21 via Eclipse Temurin (Adoptium)..."
@@ -50,6 +53,11 @@ success "PDF directory ready at /tmp/medisync/pdfs."
 
 # ── 3. Clone HAD repo ─────────────────────────────────────────────────────────
 log "Cloning HAD repository to $INSTALL_DIR..."
+# If directory exists but is not a git repo (e.g. from a failed previous run), remove it
+if [ -d "$INSTALL_DIR" ] && [ ! -d "$INSTALL_DIR/.git" ]; then
+    warn "$INSTALL_DIR exists but is not a git repo — removing and re-cloning..."
+    sudo rm -rf "$INSTALL_DIR"
+fi
 sudo mkdir -p "$INSTALL_DIR"
 sudo chown ubuntu:ubuntu "$INSTALL_DIR"
 if [ -d "$INSTALL_DIR/.git" ]; then
