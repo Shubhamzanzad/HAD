@@ -23,7 +23,7 @@ const useRefreshToken = () => {
             }
             else{
 
-                toast.info("Logged out due to session active in other device");
+                toast.info("Session expired. Please log in again.");
             }
             setAuth({});
             localStorage.setItem("isLogged",false);

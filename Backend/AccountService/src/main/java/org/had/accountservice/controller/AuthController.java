@@ -61,8 +61,6 @@ public class AuthController {
             UserCredentialUserDetails credential = (UserCredentialUserDetails) authenticate.getPrincipal();
             String role = authService.getAuthoritiesAsString(credential.getAuthorities());
             String token = authService.generateToken(authRequest.getUsername(), role);
-            // implementing single login
-            refreshTokenService.handleRefreshtoken(credential.getId());
 
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(credential.getId());
             ResponseCookie jwtRefreshCookie = jwtService.generateRefreshJwtCookie(refreshToken.getToken());

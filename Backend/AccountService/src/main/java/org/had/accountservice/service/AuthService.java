@@ -319,8 +319,8 @@ public class AuthService {
         if (role.equals("STAFF")) {
             Optional<StaffDetails> staffDetails = staffDetailsRepository.findById(Integer.valueOf(id));
             UserCredential userCredential = staffDetails.get().getLoginCredential();
-            RefreshToken refreshToken = refreshTokenRepository.findByUser(userCredential).get();
-            refreshTokenRepository.delete(refreshToken);
+            if (refreshTokenRepository.existsByUser(userCredential))
+                refreshTokenRepository.deleteByUser(userCredential);
             if (staffDetails.isPresent()) {
                 String password = userCredential.getPassword();
                 if (passwordEncoder.matches(oldPassword, password)) {
@@ -332,8 +332,8 @@ public class AuthService {
         } else {
             Optional<DoctorDetails> doctorDetails = doctorDetailsRepository.findById(Integer.valueOf(id));
             UserCredential userCredential = doctorDetails.get().getLoginCredential();
-            RefreshToken refreshToken = refreshTokenRepository.findByUser(userCredential).get();
-            refreshTokenRepository.delete(refreshToken);
+            if (refreshTokenRepository.existsByUser(userCredential))
+                refreshTokenRepository.deleteByUser(userCredential);
             if (doctorDetails.isPresent()) {
                 String password = userCredential.getPassword();
                 if (passwordEncoder.matches(oldPassword, password)) {

@@ -47,11 +47,4 @@ public class RefreshTokenService {
         return refreshTokenRepository.deleteByUser(userCredentialRepository.findById(userId).get());
     }
 
-    public void handleRefreshtoken(Integer userId){
-        Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByUser(userCredentialRepository.findById(userId).get());
-        if(refreshTokenOptional.isPresent()){
-            refreshTokenRepository.delete(refreshTokenOptional.get());
-        }
-    }
-
 }
