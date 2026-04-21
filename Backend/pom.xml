@@ -15,6 +15,10 @@
     <name>Backend</name>
 	<description>Backend</description>
     <modules>
+        <module>DiscoveryServer</module>
+        <module>API-Gateway</module>
+        <module>AccountService</module>
+        <module>PatientService</module>
         <module>ConsentService</module>
     </modules>
     <properties>

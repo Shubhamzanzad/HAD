@@ -11,8 +11,7 @@ const useAxiosPrivate = () => {
   useEffect(() => {
     const sd = async () => {
         try{
-          console.log("first")
-            const newAccessToken = await axios.post(
+            await axios.post(
               "/auth/isLogged",
               {},
               {
@@ -20,15 +19,19 @@ const useAxiosPrivate = () => {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${auth?.accessToken}`,
                 },
-                withCredentials: true, // Include credentials (cookies) in the request
+                withCredentials: true,
               }
             );
         }
         catch (error){
             console.log(error);
+            if (error.response?.status === 500 || error.response?.status === 503 || !error.response) {
+                toast.error("Server error. Please try again later.");
+                return;
+            }
             setAuth({});
-            await localStorage.setItem("isLogged",false);
-            toast.info("Logged out due to session active in other device");
+            localStorage.setItem("isLogged", false);
+            toast.info("Session expired. Please log in again.");
         }
     };
     sd();
